@@ -8,7 +8,7 @@ export default async function handler(req, res) {
       `https://api.open-meteo.com/v1/forecast` +
       `?latitude=${encodeURIComponent(latitude)}` +
       `&longitude=${encodeURIComponent(longitude)}` +
-      `&current=temperature_2m,apparent_temperature,relative_humidity_2m,visibility,wind_speed_10m,wind_direction_10m` +
+      `&current=temperature_2m,apparent_temperature,relative_humidity_2m,visibility,wind_speed_10m,wind_direction_10m,weather_code` +
       `&daily=sunrise,sunset` +
       `&timezone=auto`;
 
@@ -39,10 +39,23 @@ export default async function handler(req, res) {
     const sunrise = sunriseLocal;
     const sunset = sunsetLocal;
 
-    // wind speed conversion: km/h -> m/s (si ton UI affiche m/s)
     const windKmh = om?.current?.wind_speed_10m;
     const windMs =
       typeof windKmh === "number" ? Number((windKmh / 3.6).toFixed(1)) : null;
+
+    const weatherMap = {
+      0: { description: "Clear sky", icon: "01d" },
+      1: { description: "Mainly clear", icon: "01d" },
+      2: { description: "Partly cloudy", icon: "02d" },
+      3: { description: "Overcast", icon: "03d" },
+      45: { description: "Fog", icon: "50d" },
+      61: { description: "Slight rain", icon: "10d" },
+      63: { description: "Moderate rain", icon: "10d" },
+      71: { description: "Slight snow", icon: "13d" },
+    };
+
+    const code = om?.current?.weather_code ?? 0;
+    const weatherInfo = weatherMap[code] || { description: "Unknown", icon: "01d" };
 
     const data = {
       name: city,
@@ -61,7 +74,7 @@ export default async function handler(req, res) {
         deg: om?.current?.wind_direction_10m ?? null,
       },
       visibility: om?.current?.visibility ?? null,
-      weather: [{ description: "N/A", icon: "01d" }],
+      weather: [{ description: weatherInfo.description, icon: weatherInfo.icon }],
       timezone,
       dt,
     };
