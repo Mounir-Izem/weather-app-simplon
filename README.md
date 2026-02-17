@@ -1,6 +1,6 @@
 Weather App – Technical Adaptation for Transport Display Scenario
 
-![Weather App Screenshot](screenshotApp.png)
+![Weather App Screenshot](icons/screenshotApp.png)
 
 This project adapts an existing weather application to meet new technical constraints for public transport information screens.
 
