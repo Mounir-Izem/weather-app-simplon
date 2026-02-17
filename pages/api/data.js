@@ -26,7 +26,7 @@ export default async function handler(req, res) {
       ? Math.floor(new Date(om.current.time).getTime() / 1000)
       : Math.floor(Date.now() / 1000);
 
-    const dt = localSeconds - timezone;
+    const dt = localSeconds;
 
     const sunriseLocal = om?.daily?.sunrise?.[0]
       ? Math.floor(new Date(om.daily.sunrise[0]).getTime() / 1000)
@@ -36,8 +36,8 @@ export default async function handler(req, res) {
       ? Math.floor(new Date(om.daily.sunset[0]).getTime() / 1000)
       : localSeconds;
 
-    const sunrise = sunriseLocal - timezone;
-    const sunset = sunsetLocal - timezone;
+    const sunrise = sunriseLocal;
+    const sunset = sunsetLocal;
 
     // wind speed conversion: km/h -> m/s (si ton UI affiche m/s)
     const windKmh = om?.current?.wind_speed_10m;
